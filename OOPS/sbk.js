@@ -1,4 +1,5 @@
 class Bank{
+
     account_details={
             1000:{account_number:1000,balance:3000,password:"userone",transactions:[]},//key & account_number must be same
             1001:{account_number:1001,balance:2000,password:"usertwo",transactions:[]},
@@ -8,9 +9,29 @@ class Bank{
 
     session={};
 
+    registration(account_number,balance,password){
+        if (this.validateAccountNumber(account_number)) {
+            console.log("this account number already exist");   
+        }
+        else{
+            this.account_details[account_number]={
+
+                account_number:account_number,
+                balance:balance,
+                password:password,
+                transactions:[]
+            }
+            console.log("your account has been created successfully");
+        }
+    }
+
+
+
     validateAccountNumber(accno){
         return accno in this.account_details?true:false;
     }
+
+
     authenticate(acno,password){
         if(this.validateAccountNumber(acno)){
             let pwd=this.account_details[acno].password;
@@ -25,6 +46,10 @@ class Bank{
             return -1; //invalid account no
         }
     }
+
+
+
+
     login(acno,password){
         let user=this.authenticate(acno,password);//1,0,-1
         if(user==1){//access granted
@@ -36,9 +61,15 @@ class Bank{
         }
 
     }
+
+
+
     getBalance(acno){
-         this.account_details[acno].balance;
+        return this.account_details[acno].balance;
     }
+
+
+
 
     balanceEnquiry(){
         //return balance of authenticated user;
@@ -52,6 +83,9 @@ class Bank{
         }
     }
 
+
+
+
     logOut(){
         if("user" in this.session){
         delete this.session["user"];
@@ -63,28 +97,30 @@ class Bank{
     }
 
 
-    fundTransfer(amount,to_acno,confirm_toacno) {
-        if("user" in this.session){
-            if(to_acno=confirm_toacno){
-                if(this.validateAccountNumber(to_acno)){
-                    let loged_user_acno=this.session["user"];
-                    let avail_balance=this.getBalance(loged_user_acno);
-                    if(amount>avail_balance){
-                        console.log("insufficient balance");
-                        avail_balance-=amount;
-                        let credited_acno_bal=this.getBalance(to_acno)+=amount
-                              console.log(`${amount} debited from ${loged_user_acno} and available balance:${avail_balance}`);
-                              console.log(`${amount} credited to ${to_acno} and available balance:${credited_acno_bal}`);
-    
-    
-                    }
-                    else{
-                        avail_balance-=amount;
-                        let credited_acno_bal=this.getBalance(to_acno);
-                        let credited_acno_balance=credited_acno_bal+=amount
-                              console.log(`An amount of ${amount} debited from ${loged_user_acno} and available balance:${avail_balance}`);
-                              console.log(`An amount of ${amount} credited to ${to_acno} and available balance:${credited_acno_balance}`);
 
+
+
+    fundTransfer(amount,to_acno,confirm_toacno) {
+
+        if("user" in this.session){
+
+            if(to_acno==confirm_toacno){
+                if(this.validateAccountNumber(to_acno)){
+
+                    let loged_user_acno=this.session["user"];
+                    var cur_balance=this.getBalance(loged_user_acno);
+
+                    if(amount>cur_balance){
+                        console.log("insufficient balance");
+                    }
+
+                    else{
+                        this.account_details[loged_user_acno].balance-=amount
+                        this.account_details[to_acno].balance+=amount
+                        let bal=this.getBalance(loged_user_acno)
+                        console.log(`your account debited with amount ${amount} avail bal${bal}`);
+                        let transaction={to:to_acno,amount:amount}
+                        this.account_details[loged_user_acno].transactions.push(transaction)
                     }
                 }
                 else{
@@ -103,11 +139,29 @@ class Bank{
         }
     }
 
+
+
+
+
+    paymentHistory(){
+        let logged_user=this.session["user"]
+        let trans=this.account_details[logged_user].transactions;
+        console.log(trans);
+    }
+
     
 }
+
+
+
 var obj=new Bank();
-obj.login(1002,"userthree")
-obj.balanceEnquiry(1001);
+obj.login(1000,"userone")
 obj.fundTransfer(200,1003,1003);
-obj.logOut();
-console.log(obj.session);
+obj.fundTransfer(2800,1001,1001)
+obj.paymentHistory()
+obj.balanceEnquiry()
+
+// console.log(obj.account_details[1000]);
+//obj.registration(1005,8000,"userfive")
+
+

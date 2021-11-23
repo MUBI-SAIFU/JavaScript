@@ -1,0 +1,25 @@
+
+input{
+    margin-top: 10px;
+    height: 63px;
+    width:263px;
+    color:white;
+    background-color: rgb(81, 88, 88);
+    border-radius: 6px;
+    
+    
+}
+.clear{
+    height: 63px;
+    width: 85px;
+    color: white;
+    border-radius: 6px;
+}
+.r1{
+    margin-top: 10px;
+    height: 26%;
+    width: 85px;
+    background-color: rgb(81, 88, 88);
+    color: white;
+    border-radius: 6px;
+}

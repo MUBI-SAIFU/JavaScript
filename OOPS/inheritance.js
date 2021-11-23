@@ -1,3 +1,5 @@
+//Classical Inheritance
+
 class Parent{
     phone(){
         console.log("have nokia6611");
